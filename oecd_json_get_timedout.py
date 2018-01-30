@@ -1,0 +1,57 @@
+import requests
+import pandas as pd
+from tqdm import tqdm
+import logging
+import datetime
+
+# http://stats.oecd.org/sdmx-json/data/<id>/all/all
+# Get JSON datasets for all key families (dataset ids)
+
+# where to save or read
+logfile = 'logs/timedout.log'
+storedir = 'OECD_json_datasets/'
+keyNamesFile = 'error_reports/timedout.csv'
+
+# logging
+logging.basicConfig(filename=logfile, filemode='w', level=logging.DEBUG)
+logging.debug("Log started at %s", str(datetime.datetime.now()))
+
+# read in list of dataset ids
+datasourceUrl = 'http://stats.oecd.org/sdmx-json/data/'
+
+dataset_ids_df = pd.read_csv(keyNamesFile)
+dataset_ids = dataset_ids_df['KeyFamilyId'].tolist()
+
+success_count = 0
+
+with requests.Session() as s:
+    for dataset_id in tqdm(dataset_ids):
+        try:
+            r = s.get(datasourceUrl + dataset_id + '/all/all', timeout=61)
+        except requests.exceptions.ReadTimeout:
+            print(dataset_id, ": OECD data request read timed out")
+            logging.debug('%s: OECD data request read timed out', dataset_id)
+        except requests.exceptions.Timeout:
+            print(dataset_id, ": OECD data request timed out")
+            logging.debug('%s: OECD data request timed out', dataset_id)
+        except requests.exceptions.HTTPError:
+            print(dataset_id, ": HTTP error")
+            logging.debug('%s: HTTP error', dataset_id)
+        except requests.exceptions.ConnectionError:
+            print(dataset_id, ": Connection error", )
+            logging.debug('%s: Connection error', dataset_id)
+        else:
+            if r.status_code == 200:
+                # save the json file - don't prettify to save space
+                target = storedir + dataset_id + ".json"
+                with open(target, 'w', encoding='utf-8') as f:
+                    f.write(r.text)
+                    success_count += 1
+            else:
+                print(dataset_id, 'HTTP Failed with code', r.status_code)
+                logging.debug('%s HTTP Failed with code %d', dataset_id, r.status_code)
+
+print("completed ...")
+print(len(dataset_ids), " Dataset Ids")
+print(success_count, " datasets retrieved")
+logging.debug("Log ended at %s", str(datetime.datetime.now()))
