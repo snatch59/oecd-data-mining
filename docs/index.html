@@ -1,0 +1,442 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>The OECD Interface &mdash; OECD Interface 0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="OECD Interface 0.1 documentation" href="#"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="#" class="icon icon-home"> OECD Interface
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">The OECD Interface</a><ul>
+<li><a class="reference internal" href="#software-suite">Software Suite</a><ul>
+<li><a class="reference internal" href="#oecd-keyfamilies-py">oecd_keyfamilies.py</a></li>
+<li><a class="reference internal" href="#oecd-schema-py">oecd_schema.py</a></li>
+<li><a class="reference internal" href="#oecd-json-get-all-py">oecd_json_get_all.py</a></li>
+<li><a class="reference internal" href="#oecd-json-convert-fullset-py">oecd_json_convert_fullset.py</a></li>
+<li><a class="reference internal" href="#oecd-csv-criteria-merge-py">oecd_csv_criteria_merge.py</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#typical-workflow">Typical Workflow</a></li>
+<li><a class="reference internal" href="#utilities">Utilities</a><ul>
+<li><a class="reference internal" href="#identify-freq-schema-py">identify_freq_schema.py</a></li>
+<li><a class="reference internal" href="#oecd-json-get-freq-py">oecd_json_get_freq.py</a></li>
+<li><a class="reference internal" href="#oecd-json-convert-freq-py">oecd_json_convert_freq.py</a></li>
+<li><a class="reference internal" href="#oecd-json-get-timedout-py">oecd_json_get_timedout.py</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#issues-and-limitations">Issues and Limitations</a><ul>
+<li><a class="reference internal" href="#oecd-data-availability">OECD Data Availability</a></li>
+<li><a class="reference internal" href="#id1">pandasdmx</a><ul>
+<li><a class="reference internal" href="#unicode-errors">Unicode Errors</a></li>
+<li><a class="reference internal" href="#keyerror-exception">KeyError exception</a></li>
+<li><a class="reference internal" href="#unable-to-create-dataframe">Unable to create DataFrame</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">OECD Interface</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="#">Docs</a> &raquo;</li>
+        
+      <li>The OECD Interface</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="the-oecd-interface">
+<h1>The OECD Interface<a class="headerlink" href="#the-oecd-interface" title="Permalink to this headline">¶</a></h1>
+<p>The <a class="reference external" href="http://www.oecd.org/">OECD</a> Interface software suite provides a means to discover, download, and
+convert <a class="reference external" href="https://data.oecd.org/api/sdmx-json-documentation/">SDMX-JSON</a> data sets into CSV files. The files can be further processed
+to select a subset according to set criteria (e.g. industries with electricity),
+with specific fixed (normalized) column types. The suite covers:</p>
+<ul class="simple">
+<li>downloading list of all OECD data set IDs and descriptions;</li>
+<li>downloading list of all data set schema;</li>
+<li>downloading all OECD SDMX-JSON data sets;</li>
+<li>converting all time period data sets to un-pivoted CSV files;</li>
+<li>selecting a subset according to set criteria with specific fixed (normalized) column types</li>
+<li>concatenating this subset of fixed column CSV files into an overall master CSV file.</li>
+</ul>
+<p>There is also the means to work with just OECD frequency dimension
+data, which are a subset of the main time period data sets. This suite covers :</p>
+<ul class="simple">
+<li>identifing frequency dimension (annual/quarterly) supporting schema;</li>
+<li>downloading just OECD SDMX-JSON data sets with a frequency dimension;</li>
+<li>converting frequency dimension data sets to multi-indexed CSV files.</li>
+</ul>
+<p>The OECD Interface software suite is written for Python 3.5, pandas 0.21.0, and
+uses the <a class="reference external" href="https://pandasdmx.readthedocs.io/en/v0.7.0/">pandasdmx</a> 0.7.0 Python package to convert <a class="reference external" href="https://data.oecd.org/api/sdmx-json-documentation/">SDMX-JSON</a> files to multi-indexed
+CSV files.</p>
+<div class="section" id="software-suite">
+<h2>Software Suite<a class="headerlink" href="#software-suite" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="oecd-keyfamilies-py">
+<h3>oecd_keyfamilies.py<a class="headerlink" href="#oecd-keyfamilies-py" title="Permalink to this headline">¶</a></h3>
+<p>Downloads the XML data structure schema for the data set IDs using the http query
+<a class="reference external" href="http://stats.oecd.org/RESTSDMX/sdmx.ashx/GetDataStructure/ALL/">http://stats.oecd.org/RESTSDMX/sdmx.ashx/GetDataStructure/ALL/</a>. The XML schema are
+then parsed for the data IDs and descriptions, which are saved in a CSV file.
+Any HTTP comms failures are logged.</p>
+<p><strong>Logs:</strong> logs/oecd_keyfamilies.logs <br />
+<strong>Data In:</strong> data from OECD server <br />
+<strong>Data Out:</strong> OECD_keys/OECD_key_names.csv</p>
+</div>
+<div class="section" id="oecd-schema-py">
+<h3>oecd_schema.py<a class="headerlink" href="#oecd-schema-py" title="Permalink to this headline">¶</a></h3>
+<p>Downloads the XML schema for each of the data set IDs using the http query
+<a class="reference external" href="http://stats.oecd.org/restsdmx/sdmx.ashx/GetSchema/">http://stats.oecd.org/restsdmx/sdmx.ashx/GetSchema/</a>, and saves as an XML file.
+Any HTTP comms failures are logged. Execution should complete in around seven
+minutes.</p>
+<p><strong>Logs:</strong> logs/oecd_schama.logs <br />
+<strong>Data In:</strong> data from OECD server; OECD_keys/OECD_key_names.csv <br />
+<strong>Data Out:</strong> OECD_schema/&lt;dataset id&gt;.xml</p>
+</div>
+<div class="section" id="oecd-json-get-all-py">
+<h3>oecd_json_get_all.py<a class="headerlink" href="#oecd-json-get-all-py" title="Permalink to this headline">¶</a></h3>
+<p>Downloads the SDMX-JSON data set for each data set ID using the http query
+stats.oecd.org/sdmx-json/data/&lt;id&gt;/all/all. The JSON data is saved without
+newlines and indentation in order to save space. The program takes three or
+four hours to download all the files, mainly due to HTTP timeouts or lack of
+server availability.</p>
+<p><strong>Logs:</strong> logs/oecd_datasets.log <br />
+<strong>Data In:</strong> data from OECD server; OECD_keys/OECD_key_names.csv <br />
+<strong>Data Out:</strong> OECD_json_datasets/&lt;dataset id&gt;.json</p>
+</div>
+<div class="section" id="oecd-json-convert-fullset-py">
+<h3>oecd_json_convert_fullset.py<a class="headerlink" href="#oecd-json-convert-fullset-py" title="Permalink to this headline">¶</a></h3>
+<p>Iterates through the OECD_json_datasets directory attemting to load each data set
+ID JSON file into pandasdmx. Those failing to load due to KeyError or Unicode
+Errors are logged in the appropriate error CSV file. Those data sets with a time
+period (which also includes the subset of those with a frequency dimension)
+are converted to pandas DataFrames and saved to a CSV file.</p>
+<p><strong>Logs:</strong> error_reports/key_errors.csv; error_reports/unicode_errors.csv, error_reports/no_time_period.csv <br />
+<strong>Data In:</strong> OECD_json_datasets/&lt;id&gt;.json <br />
+<strong>Data Out:</strong> OECD_csv_datasets/&lt;id&gt;.csv</p>
+</div>
+<div class="section" id="oecd-csv-criteria-merge-py">
+<h3>oecd_csv_criteria_merge.py<a class="headerlink" href="#oecd-csv-criteria-merge-py" title="Permalink to this headline">¶</a></h3>
+<p>Analyses, selects and merges CSV data sets that match a set of criteria, as
+follows:</p>
+<p>Stage 1. Reads each data set CSV file in the OECD_csv_datasets directory, and
+looks for evidence of a column matching one of the column criteria. A DataFrame
+of candidate (matching column) data sets is created.</p>
+<p>Stage 2. Iternates through the candidate DataFrames and produces a new DataFrame
+for each, consisting only of rows that match a content criteria for the column
+of interest. If the resulting DataFrame is not empty (i.e. content was found),
+then stage 3 is carried out on that DataFrame.</p>
+<p>Stage 3. This standardises the column names to a given template (YEAR, series,
+INDUSTRY, MEASURE, NATION). First there is a tuple-column clean-up, followed by
+the column rename, and a futher clean up and rename  of alternate industry
+and country column names. Finally any additional columns that are not in the
+template are merged together as tuples under the MEASURE column. If the
+MEASURE column does not exist it is created. Each data set reaching this stage
+is saved with an _C in the file name.</p>
+<p>Stage 4. This takes all the _C files from stage 3, loads them, and concatenates
+them into a single data set and saved as oecd_merged.csv.</p>
+<p><strong>Logs:</strong> none <br />
+<strong>Data In:</strong> OECD_csv_datasets/&lt;id&gt;.csv <br />
+<strong>Data Out:</strong> OECD_csv_processed/&lt;id&gt;_C.csv, OECD_csv_processed/oecd_merged.csv</p>
+</div>
+</div>
+<div class="section" id="typical-workflow">
+<h2>Typical Workflow<a class="headerlink" href="#typical-workflow" title="Permalink to this headline">¶</a></h2>
+<p>As a program can rely on the output of another program, they should be run in
+the following order:</p>
+<ol class="arabic simple">
+<li>oecd_keyfamilies.py</li>
+<li>oecd_schema.py (<em>optional</em>)</li>
+<li>oecd_json_get_all.py</li>
+<li>ocecd_json_convert_fullset.py</li>
+<li>oecd_csv_criteria_merge.py</li>
+</ol>
+</div>
+<div class="section" id="utilities">
+<h2>Utilities<a class="headerlink" href="#utilities" title="Permalink to this headline">¶</a></h2>
+<p>Additions to the main software suite for diagnostic purposes, or for working
+on a smaller number of data sets.</p>
+<div class="section" id="identify-freq-schema-py">
+<h3>identify_freq_schema.py<a class="headerlink" href="#identify-freq-schema-py" title="Permalink to this headline">¶</a></h3>
+<p>Parses the XML schema for each data set ID to see if it supports a frequency
+dimension such as annual, quarterly, etc. Data set IDs that support a frequency
+dimension are stored in a CSV file.</p>
+<p><strong>Logs:</strong> none <br />
+<strong>Data In:</strong> OECD_keys/OECD_key_names.csv; OECD_schema/&lt;dataset id&gt;.xml <br />
+<strong>Data Out:</strong> OECD_keys/FREQ_key_names.csv</p>
+</div>
+<div class="section" id="oecd-json-get-freq-py">
+<h3>oecd_json_get_freq.py<a class="headerlink" href="#oecd-json-get-freq-py" title="Permalink to this headline">¶</a></h3>
+<p>Only downloads the SDMX-JSON data set for each data set ID having a frequency domain,
+using the http query stats.oecd.org/sdmx-json/data/&lt;id&gt;/all/all. The JSON data
+is saved without newlines and indentation in order to save space.</p>
+<p><strong>Logs:</strong> logs/oecd_datasets.log <br />
+<strong>Data In:</strong> data from OECD server; OECD_keys/FREQ_key_names.csv <br />
+<strong>Data Out:</strong> OECD_json_datasets/&lt;dataset id&gt;.json</p>
+</div>
+<div class="section" id="oecd-json-convert-freq-py">
+<h3>oecd_json_convert_freq.py<a class="headerlink" href="#oecd-json-convert-freq-py" title="Permalink to this headline">¶</a></h3>
+<p>Uses the previously generated list of SDMX-JSON files supporting the frequency
+domain to read in the corresponding JSON files, load them into pandasdmx,
+produce a pandas data frame for annual data, and save to a multi-indexed CSV
+file.</p>
+<p><strong>Logs:</strong> error_reports/freq_unicode_errors.csv; error_reports/freq_key_errors.csv <br />
+<strong>Data In:</strong> OECD_json_datasets/&lt;dataset id&gt;.json; OECD_keys/FREQ_key_names.csv  <br />
+<strong>Data Out:</strong> OECD_csv_datasets_A/&lt;dataset id&gt;_A.csv</p>
+</div>
+<div class="section" id="oecd-json-get-timedout-py">
+<h3>oecd_json_get_timedout.py<a class="headerlink" href="#oecd-json-get-timedout-py" title="Permalink to this headline">¶</a></h3>
+<p>Downloads the SDMX-JSON data set for each data set ID having previously been
+noted as unavailable due to a request timeout,
+using the http query stats.oecd.org/sdmx-json/data/&lt;id&gt;/all/all.</p>
+<p>NOTE: if a data set is successfully retrieved it is not removed from
+timed_out.csv. At the moment this has to be corrected manually. timed_out.csv
+and http500.csv are also manually created at the moment.</p>
+<p><strong>Logs:</strong> logs/timedout.log <br />
+<strong>Data In:</strong> data from OECD server; error_reports/timed_out.csv <br />
+<strong>Data Out:</strong> OECD_json_datasets/&lt;dataset id&gt;.json</p>
+</div>
+</div>
+<div class="section" id="issues-and-limitations">
+<h2>Issues and Limitations<a class="headerlink" href="#issues-and-limitations" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="oecd-data-availability">
+<h3>OECD Data Availability<a class="headerlink" href="#oecd-data-availability" title="Permalink to this headline">¶</a></h3>
+<p>Potentially there are 1198 OECD data sources available. However,  at time of
+writing 101 are not accessible due to the server not being available (HTTP error
+500), and 55 are not accessible due to the HTTP data request timing out (a total
+of 156 data sources not available). Unavailable data sources have been marked up
+in a spreadsheet.</p>
+</div>
+<div class="section" id="id1">
+<h3>pandasdmx<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<p>The 0.7.0 version of the pandasdmx Python package, though able to load all
+time period SDMX-JSON data (excluding the KeyError issues) is only able to
+convert to pandas DataFrames those with a frequency dimension present. However,
+frequency dimension data sets only account for 219 data sources, of which only
+128 of these are available from the OECD data server due to accessibility issues.
+This leaves 979 data sources without a frequency dimension. To solve this
+in-house code was written to convert all time period data to pandas DataFrames
+allowing access to 835 data sets.</p>
+<p>The following is a summary of know issues with pandasdmx 0.7.0:</p>
+<div class="section" id="unicode-errors">
+<h4>Unicode Errors<a class="headerlink" href="#unicode-errors" title="Permalink to this headline">¶</a></h4>
+<p>pandasdmx throws a Unicode exception for 63 data sets. One is due to malformed
+JSON (use of non-escaped double quotes), the rest are in Portuguese, caused by
+a capital A with an inflexion. Apart from the malformed JSON data set, there is
+no move to fix this as the Portuguese data is a duplicate of data available in
+English.</p>
+</div>
+<div class="section" id="keyerror-exception">
+<h4>KeyError exception<a class="headerlink" href="#keyerror-exception" title="Permalink to this headline">¶</a></h4>
+<p>pandasdmx is unable to read in data due to throwing a KeyError exception for
+some non-frequency dimension data sets.</p>
+</div>
+<div class="section" id="unable-to-create-dataframe">
+<h4>Unable to create DataFrame<a class="headerlink" href="#unable-to-create-dataframe" title="Permalink to this headline">¶</a></h4>
+<p>pandasdmx is unable to create a pandas DataFrame for non-frequency
+dimension data sets. However in-house code has been written to convert the
+JSON-SDMX data loaded into pandasdmx into pandas DataFrames.</p>
+</div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Petras Saduikis.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
