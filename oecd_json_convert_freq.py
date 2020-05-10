@@ -1,14 +1,21 @@
 from pandasdmx import Request
 import pandas as pd
+import os
 
 # Convert all JSON datasets with a frequency domain into multi-indexed CSV files
 
 # where to save or read
-jsonDir = 'OECD_json_datasets/'
-csvDir = 'OECD_csv_datasets_A/'
-freqKeysFile = 'OECD_keys/FREQ_key_names.csv'
-unicodeErrorFile = 'error_reports/freq_unicode_errors.csv'
-keyErrorFile = 'error_reports/freq_key_errors.csv'
+
+JSON_DIR = 'OECD_json_datasets'
+CSV_DIR = 'OECD_csv_datasets_A'
+DATA_DIR = 'OECD_keys'
+
+FREQ_KEYS_FILE = os.path.join(DATA_DIR, 'FREQ_key_names.csv')
+# unicodeErrorFile = 'error_reports/freq_unicode_errors.csv'
+# keyErrorFile = 'error_reports/freq_key_errors.csv'
+
+if not os.path.exists(CSV_DIR):
+    os.makedirs(CSV_DIR)
 
 # OECD data
 oecd = Request('OECD')
@@ -19,7 +26,7 @@ keyErrors = []
 missingFiles = []
 
 # Load a list of data set ids which support the frequency domain
-dataset_ids_df = pd.read_csv(freqKeysFile)
+dataset_ids_df = pd.read_csv(FREQ_KEYS_FILE)
 
 # iterate through each supporting JSON file and convert it
 # NOTE: we are working the the schema list going though frequency supporting data
@@ -29,7 +36,7 @@ for index, row in dataset_ids_df.iterrows():
     dataset_id = row['KeyFamilyId']
     freq_dim_name = row['Dimension']
     try:
-        data_response = oecd.data(fromfile=jsonDir + dataset_id + '.json')
+        data_response = oecd.data(fromfile=os.path.join(JSON_DIR, dataset_id + '.json'))
     except FileNotFoundError:
         missingFiles.append(dataset_id)
     except UnicodeDecodeError:
@@ -51,7 +58,7 @@ for index, row in dataset_ids_df.iterrows():
         print()
 
         df = data_response.write(annual)
-        df.to_csv(csvDir + dataset_id + '_A.csv')
+        df.to_csv(os.path.join(CSV_DIR, dataset_id + '_A.csv'))
 
 print("completed ...")
 print(len(missingFiles), 'missing files out of', len(dataset_ids_df.index))

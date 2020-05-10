@@ -1,1 +1,10 @@
 .idea
+.vscode
+
+logs/
+error_reports/
+OECD_keys/
+OECD_schema/
+OECD_json_datasets/
+OECD_csv_datasets/
+OECD_csv_processed/

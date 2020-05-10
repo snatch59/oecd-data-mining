@@ -2,9 +2,12 @@ import pandas as pd
 import os
 
 # where to save or read
-csvDir = 'OECD_csv_datasets'
-datafile = 'OECD_csv_processed/industry_candidates.csv'
-processedDir = 'OECD_csv_processed/'
+CSV_DIR = 'OECD_csv_datasets'
+PROCESSED_DIR = 'OECD_csv_processed'
+# datafile = 'OECD_csv_processed/industry_candidates.csv'
+
+if not os.path.exists(PROCESSED_DIR):
+    os.makedirs(PROCESSED_DIR)
 
 
 # STAGE 3:
@@ -76,7 +79,7 @@ def standardize_data(dset_id, df):
     print(dset_id, nonstdcols_list, measurecol)
     print(dset_id, cols)
     df.set_index('YEAR', inplace=True)
-    df.to_csv(processedDir + dset_id + '_C.csv')
+    df.to_csv(os.path.join(PROCESSED_DIR, dset_id + '_C.csv'))
 
 
 # STAGE 1: OECD data set CSV analysis for data sets covering industries
@@ -87,10 +90,10 @@ candidates = []
 column_name = []
 
 # iterate through each CSV file in the directory and analyse it
-for filename in os.listdir(csvDir):
+for filename in os.listdir(CSV_DIR):
     if filename.endswith(".csv"):
         dsetid = os.path.splitext(filename)[0]
-        fromfile = os.path.join(csvDir, filename)
+        fromfile = os.path.join(CSV_DIR, filename)
 
         oecd_dataset_df = pd.read_csv(fromfile)
         oecd_cols = oecd_dataset_df.columns.values.tolist()
@@ -122,7 +125,7 @@ for row in candidates_df.iterrows():
     datasetId = row[1]['KeyFamilyId']
     colName = row[1]['ColumnName']
 
-    dataset_df = pd.read_csv(csvDir + '/' + datasetId + '.csv')
+    dataset_df = pd.read_csv(os.path.join(CSV_DIR, datasetId + '.csv'))
     print('checking', datasetId)
 
     try:
@@ -146,10 +149,10 @@ def_cols = ['YEAR', 'series', 'INDUSTRY', 'NATION', 'MEASURE']
 combined_df = pd.DataFrame(columns=def_cols)
 
 #  STAGE 4. Iterate through each CSV file in the directory and concatenate it
-for filename in os.listdir(processedDir):
+for filename in os.listdir(PROCESSED_DIR):
     if filename.endswith("_C.csv"):
         fname = os.path.splitext(filename)[0]
-        fromfile = os.path.join(processedDir, filename)
+        fromfile = os.path.join(PROCESSED_DIR, filename)
         print(fname)
 
         source_df = pd.read_csv(fromfile)
@@ -159,7 +162,7 @@ for filename in os.listdir(processedDir):
         combined_df = pd.concat([combined_df, stripped_df])
 
 combined_df.set_index('YEAR', inplace=True)
-combined_df.to_csv(processedDir + 'oecd_merged.csv')
+combined_df.to_csv(os.path.join(PROCESSED_DIR, 'oecd_merged.csv'))
 
 print()
 print('completed ...')

@@ -21,8 +21,8 @@ which are a subset of the main time period data sets. This suite covers :
 * downloading just OECD SDMX-JSON data sets with a frequency dimension;
 * converting frequency dimension data sets to multi-indexed CSV files.
 
-The OECD Interface software suite is written for Python 3.5, pandas 0.21.0,
-and uses the pandasdmx 0.7.0 Python package to convert SDMX-JSON files
+The OECD Interface software suite is written for Python 3.5, pandas 0.24.2,
+and uses the pandasdmx 0.8.2 Python package to convert SDMX-JSON files
 to multi-indexed CSV files.
 
 **The full online documentation is to be found here, and lays out the

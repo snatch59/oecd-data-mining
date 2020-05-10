@@ -3,17 +3,27 @@ import pandas as pd
 from tqdm import tqdm
 import logging
 import datetime
+import os
 
 # http://stats.oecd.org/sdmx-json/data/<id>/all/all
 # Get JSON datasets for all key families (dataset ids)
 
 # where to save or read
-logfile = 'logs/timedout.log'
-storedir = 'OECD_json_datasets/'
+LOG_DIR = 'logs'
+STORE_DIR = 'OECD_json_datasets'
+
+LOGFILE = os.path.join(LOG_DIR, 'timedout.log')
+
+if not os.path.exists(LOG_DIR):
+    os.makedirs(LOG_DIR)
+
+if not os.path.exists(STORE_DIR):
+    os.makedirs(STORE_DIR)
+
 keyNamesFile = 'error_reports/timedout.csv'
 
 # logging
-logging.basicConfig(filename=logfile, filemode='w', level=logging.DEBUG)
+logging.basicConfig(filename=LOGFILE, filemode='w', level=logging.DEBUG)
 logging.debug("Log started at %s", str(datetime.datetime.now()))
 
 # read in list of dataset ids
@@ -43,7 +53,7 @@ with requests.Session() as s:
         else:
             if r.status_code == 200:
                 # save the json file - don't prettify to save space
-                target = storedir + dataset_id + ".json"
+                target = os.path.join(STORE_DIR, dataset_id + ".json")
                 with open(target, 'w', encoding='utf-8') as f:
                     f.write(r.text)
                     success_count += 1

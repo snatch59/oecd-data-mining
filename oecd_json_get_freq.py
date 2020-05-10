@@ -3,23 +3,30 @@ import pandas as pd
 from tqdm import tqdm
 import logging
 import datetime
+import os
 
 # http://stats.oecd.org/sdmx-json/data/<id>/all/all
 # Get JSON datasets for key families (dataset ids) that have a frequency dimension
 
 # where to save or read
-logfile = 'logs/oecd_datasets.log'
-storedir = 'OECD_json_datasets/'
-freqKeysFile = 'OECD_keys/FREQ_key_names.csv'
+LOG_DIR = 'logs'
+STORE_DIR = 'OECD_json_datasets'
+DATA_DIR = 'OECD_keys'
+
+LOGFILE = os.path.join(LOG_DIR, 'oecd_datasets.log')
+FREQ_KEYS_FILE = os.path.join(DATA_DIR, 'FREQ_key_names.csv')
+
+if not os.path.exists(LOG_DIR):
+    os.makedirs(LOG_DIR)
 
 # logging
-logging.basicConfig(filename=logfile, filemode='w', level=logging.DEBUG)
+logging.basicConfig(filename=LOGFILE, filemode='w', level=logging.DEBUG)
 logging.debug("Log started at %s", str(datetime.datetime.now()))
 
 # read in list of dataset ids
 datasourceUrl = 'http://stats.oecd.org/sdmx-json/data/'
 
-dataset_ids_df = pd.read_csv(freqKeysFile)
+dataset_ids_df = pd.read_csv(FREQ_KEYS_FILE)
 dataset_ids = dataset_ids_df['KeyFamilyId'].tolist()
 
 success_count = 0
@@ -43,7 +50,7 @@ with requests.Session() as s:
         else:
             if r.status_code == 200:
                 # save the json file - don't prettify to save space
-                target = storedir + dataset_id + ".json"
+                target = os.path.join(STORE_DIR, dataset_id + ".json")
                 with open(target, 'w', encoding='utf-8') as f:
                     f.write(r.text)
                     success_count += 1

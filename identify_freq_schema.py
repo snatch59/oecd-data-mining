@@ -1,10 +1,13 @@
 import pandas as pd
 import xml.etree.ElementTree as ET
+import os
 
 # where to load or save
-schemaDir = 'OECD_schema/'
-keyNamesFile = 'OECD_keys/OECD_key_names.csv'
-datafile = 'OECD_keys/FREQ_key_names.csv'
+SCHEMA_DIR = 'OECD_schema'
+DATA_DIR = 'OECD_keys'
+
+KEY_NAMES_FILE = os.path.join(DATA_DIR, 'OECD_key_names.csv')
+DATA_FILE = os.path.join(DATA_DIR, 'FREQ_key_names.csv')
 
 # performance metrics
 dataset_files_cnt = 0
@@ -15,14 +18,14 @@ usable_datasets = []
 frequency_keywords = []
 
 # Load a list of data set ids
-dataset_ids_df = pd.read_csv(keyNamesFile)
+dataset_ids_df = pd.read_csv(KEY_NAMES_FILE)
 dataset_ids = dataset_ids_df['KeyFamilyId'].tolist()
 
 # go through each data set schema file and see if it
 # support the FREQUENCY or FREQ dimension for observations
 for dataset_id in dataset_ids:
     try:
-        tree = ET.parse(schemaDir + dataset_id + '.xml')
+        tree = ET.parse(os.path.join(SCHEMA_DIR, dataset_id + '.xml'))
     except FileNotFoundError:
         pass
     else:
@@ -53,7 +56,7 @@ for dataset_id in dataset_ids:
 if len(usable_datasets):
     usableDF = pd.DataFrame({'KeyFamilyId': usable_datasets, 'Dimension': frequency_keywords})
     usableDF.set_index('KeyFamilyId', inplace=True)
-    usableDF.to_csv(datafile)
+    usableDF.to_csv(DATA_FILE)
 
 print()
 print('completed ...')

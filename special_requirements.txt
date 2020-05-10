@@ -1,0 +1,2 @@
+pandasSDMX==0.8.2
+pandas=0.24.2
